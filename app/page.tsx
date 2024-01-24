@@ -86,7 +86,7 @@ export default function Home() {
                 </span>
 
                 <span>
-                  It's almost time, you know!
+                  It&apos;s almost time, you know!
                 </span>
               </section>
             </section>
