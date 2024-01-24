@@ -64,7 +64,7 @@ export default function Home() {
 
           <section className="bg-text/5 p-2 rounded-md text-text/50 flex flex-col gap-y-2 shadow-lg opacity-80 hover:opacity-100  hover:cursor-pointer">
             {/* Speaker */}
-            <h2 className="text-lg font-semibold text-text/75">Yotsuba:</h2>
+            <h2 className="text-lg font-semibold text-text/75">Yousuke:</h2>
 
             {/* Translations */}
             <section className="flex flex-col gap-y-1">
