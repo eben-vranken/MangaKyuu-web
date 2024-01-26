@@ -1,17 +1,23 @@
 'use client';
 
 // Icons
-import { CaretDown, CaretUp, Plus, X } from "@phosphor-icons/react"
+import { CaretDown, CaretUp, Plus, Trash, X } from "@phosphor-icons/react"
 
 // React
 import { FunctionComponent, useEffect, useState } from "react";
+
+
+// Shortcuts
+interface ShortcutActions {
+    [key: string]: Function;
+}
 
 const DialogueSidebar: FunctionComponent = () => {
     const [dialogues, setDialogues] = useState<Array<{ speaker: string, dialogue: string }>>([]);
     const [addDialogueModel, setAddDialogueModel] = useState(false)
 
     const handleModalClick = () => {
-        setAddDialogueModel(!addDialogueModel);
+        setAddDialogueModel((prevValue) => !prevValue);
     }
 
     const handleAddDialogue = (event: React.FormEvent<HTMLFormElement>) => {
@@ -39,9 +45,39 @@ const DialogueSidebar: FunctionComponent = () => {
         dialogueInput.value = '';
     }
 
+    const handleDeleteDialogue = (id: number) => {
+        // Filter out the dialogue with the given id
+        const updatedDialogues = dialogues.filter((_, index) => index !== id);
+
+        // Update the state
+        setDialogues(updatedDialogues);
+    }
+
     const handleGetData = () => {
 
     }
+
+    const shortcutActions: ShortcutActions = {
+        'Shift+A': handleModalClick,
+    };
+
+    // Register event listeners for shortcuts
+    useEffect(() => {
+        const handleKeyPress = (event: KeyboardEvent) => {
+            const combination = `${event.shiftKey ? 'Shift+' : ''}${event.key.toUpperCase()}`;
+            const action = shortcutActions[combination];
+
+            if (action) {
+                action();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
 
     return (
         <>
@@ -62,8 +98,12 @@ const DialogueSidebar: FunctionComponent = () => {
                     {/* Individual Dialogue */}
                     {dialogues.length > 0 ? (
                         dialogues.map((dialogue, id) => (
-                            <section key={`${dialogue.speaker}:${id}`} className="bg-text/5 p-2 rounded-md text-text/50 flex flex-col gap-y-2 shadow-lg opacity-80 hover:opacity-100 hover:cursor-pointer">
-                                <h2 className="text-lg font-semibold text-text/75">{dialogue.speaker}</h2>
+                            <section key={`${dialogue.speaker}:${id}`} className="bg-text/5 p-2 rounded-md text-text/50 flex flex-col gap-y-2 shadow-lg">
+                                <section className="flex items-center justify-between">
+                                    <h2 className="text-lg font-semibold text-text/75">{dialogue.speaker}:</h2>
+
+                                    <Trash size={25} weight="bold" className="text-red-500 hover:opacity-75 transition-opacity duration-200 cursor-pointer" onClick={() => handleDeleteDialogue(id)} />
+                                </section>
 
                                 {/* Translations */}
                                 <section className="flex flex-col gap-y-1">
@@ -117,7 +157,7 @@ const DialogueSidebar: FunctionComponent = () => {
                 <form onSubmit={handleAddDialogue} className="flex flex-col gap-y-4">
                     <section className="flex flex-col">
                         <label htmlFor="speaker" className="font-medium opacity-50">Speaker:</label>
-                        <input type="text" name="speaker" className="bg-text/5 rounded py-1 px-2 outline-none" required />
+                        <input type="text" name="speaker" className="bg-text/5 rounded py-1 px-2 outline-none" required autoFocus />
                     </section>
                     <section className="flex flex-col">
                         <label htmlFor="dialogue" className="font-medium opacity-50">Dialogue: </label>

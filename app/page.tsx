@@ -1,13 +1,12 @@
 import DialogueSidebar from "@/components/Manga/DialogueSidebar";
+import MangaReader from "@/components/Manga/MangaReader";
 
 export default function Home() {
   return (
     // Home page
     <main className="flex flex-1 gap-x-2 relative">
       {/* Manga View */}
-      <section className="flex w-full bg-slate-50/5 ">
-
-      </section>
+      <MangaReader />
 
       {/* Text Sidebar */}
       <DialogueSidebar />
