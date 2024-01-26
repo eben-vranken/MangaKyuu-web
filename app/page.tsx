@@ -4,7 +4,7 @@ import MangaReader from "@/components/Manga/MangaReader";
 export default function Home() {
   return (
     // Home page
-    <main className="flex flex-1 gap-x-2 relative">
+    <main className="flex overflow-hidden flex-1 gap-x-2 relative">
       {/* Manga View */}
       <MangaReader />
 

@@ -13,3 +13,18 @@
 .button:hover {
     opacity: 85%;
 }
+
+/* styles.css or global.css */
+html,
+body,
+#__next {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+main {
+    height: 100%;
+}

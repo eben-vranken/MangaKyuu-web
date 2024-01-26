@@ -10,7 +10,7 @@ const Navbar: FunctionComponent = () => {
             {/* Nav Brand */}
             <Link className="font-bold text-lg flex items-center gap-x-1" href={'/'}>
                 <Books size={25} weight="bold" className="text-primary" />
-                <span>MangAlyzer</span>
+                <span>MangaKyuu</span>
             </Link>
 
             {/* Links */}
