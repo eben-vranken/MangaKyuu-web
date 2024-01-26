@@ -26,7 +26,9 @@ const MangaReader: FunctionComponent = () => {
     return (
         <section className="flex overflow-y-scroll w-full bg-slate-50/5">
             {fileState.file ? (
-                <></>
+                <section>
+                    {/* Show all cbz images in order here */}
+                </section>
             ) : (
                 <section className="flex flex-col w-full items-center justify-center">
                     <label
