@@ -6,13 +6,18 @@ import { CaretDown, CaretLeft, CaretUp, List, Plus, Trash, X } from "@phosphor-i
 // React
 import { FunctionComponent, useEffect, useState } from "react";
 
+// Hooks
+import useGetTranslation from "@/api/getTranslation"
 
 // Shortcuts
 interface ShortcutActions {
     [key: string]: Function;
 }
 
+
 const DialogueSidebar: FunctionComponent = () => {
+    const { getTranslation } = useGetTranslation();
+
     // Sidebar states
     const [sidebar, setSidebar] = useState(false);
 
@@ -28,22 +33,40 @@ const DialogueSidebar: FunctionComponent = () => {
         setAddDialogueModel((prevValue) => !prevValue);
     }
 
-    const handleAddDialogue = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleAddDialogue = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        // Get values from the form
         const speakerInput = event.currentTarget.speaker as HTMLInputElement;
         const dialogueInput = event.currentTarget.dialogue as HTMLTextAreaElement;
 
-        // Create a new dialogue object
         const newDialogue = {
             speaker: speakerInput.value,
-            dialogue: dialogueInput.value
+            dialogue: dialogueInput.value,
         };
 
-        // Add the new dialogue object to the dialogues array
-        setDialogues(prevDialogues => [...prevDialogues, newDialogue]);
+        try {
+            // Call the translation API
+            const translationResponse = await getTranslation(
+                'org-y1JIomEfsZwy4FtGuDUlmg1q',
+                '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',
+                newDialogue.dialogue
+            );
 
+            if (typeof translationResponse === 'string') {
+                // Assuming the response content is a JSON string, parse it to an object
+                const parsedContent = JSON.parse(translationResponse);
+                // Extract the translated text from the parsed content
+                const translatedText = parsedContent.sentence_meaning;
+                // Update the dialogue content with the translation response
+                newDialogue.dialogue = translatedText || newDialogue.dialogue;
+            }
+
+            // Add the new dialogue object to the dialogues array
+            setDialogues((prevDialogues) => [...prevDialogues, newDialogue]);
+        } catch (err: any) {
+            console.error('Error fetching translation: ', err);
+            console.error('Error fetching translation: ' + err.message);
+        }
 
         // Close the modal after adding dialogue
         setAddDialogueModel(false);
@@ -51,7 +74,7 @@ const DialogueSidebar: FunctionComponent = () => {
         // Clear the form inputs
         speakerInput.value = '';
         dialogueInput.value = '';
-    }
+    };
 
     const handleDeleteDialogue = (id: number) => {
         // Filter out the dialogue with the given id
@@ -61,9 +84,6 @@ const DialogueSidebar: FunctionComponent = () => {
         setDialogues(updatedDialogues);
     }
 
-    const handleGetData = () => {
-
-    }
 
     const shortcutActions: ShortcutActions = {
         'Shift+A': handleModalClick,
